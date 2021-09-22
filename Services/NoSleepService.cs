@@ -26,6 +26,8 @@ namespace TgBotAspNet.Services
             _configuration = configuration;
             _logger = logger;
             _clientFactory = clientFactory;
+            _host = _configuration.GetValue<string>("CurrentHost");
+
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -45,7 +47,7 @@ namespace TgBotAspNet.Services
         private async void SelfRequest(object state)
         {
             _logger.LogInformation("Self Request");
-            var request = new HttpRequestMessage(HttpMethod.Get,$"{_configuration.GetValue<string>("CurrentHost")}/config/entity");
+            var request = new HttpRequestMessage(HttpMethod.Get,$"{_host}/config/entity");
             var client = _clientFactory.CreateClient();
             var response = await client.SendAsync(request);
 
