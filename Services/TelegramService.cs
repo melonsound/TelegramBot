@@ -34,7 +34,7 @@ namespace TgBotAspNet.Services
             _logger = logger;
             _configuration = configuration;
 
-            _botClient = new TelegramBotClient(Environment.GetEnvironmentVariable("BOT_TOKEN"));
+            _botClient = new TelegramBotClient(_configuration.GetValue<string>("BotToken"));
             _botClient.OnMessage += OnMessage;
             _botClient.OnCallbackQuery += OnCallbackQuery;
             _botClient.OnUpdate += OnUpdate;

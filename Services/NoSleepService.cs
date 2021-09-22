@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,22 +15,23 @@ namespace TgBotAspNet.Services
 {
     public class NoSleepService : IHostedService
     {
+        private readonly IConfiguration _configuration;
         private readonly ILogger<NoSleepService> _logger;
         private Timer _timer;
         private readonly IHttpClientFactory _clientFactory;
         private readonly string _host;
 
-        public NoSleepService(IHttpClientFactory clientFactory, ILogger<NoSleepService> logger)
+        public NoSleepService(IHttpClientFactory clientFactory, ILogger<NoSleepService> logger, IConfiguration configuration)
         {
+            _configuration = configuration;
             _logger = logger;
             _clientFactory = clientFactory;
-            _host = Environment.GetEnvironmentVariable("HOST");
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start No Sleep Service");
-            _timer = new Timer(SelfRequest, null, TimeSpan.Zero, TimeSpan.FromMinutes(40));
+            _timer = new Timer(SelfRequest, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
             
 
             return Task.CompletedTask;
@@ -43,7 +45,7 @@ namespace TgBotAspNet.Services
         private async void SelfRequest(object state)
         {
             _logger.LogInformation("Self Request");
-            var request = new HttpRequestMessage(HttpMethod.Get,$"{_host}/config/entity");
+            var request = new HttpRequestMessage(HttpMethod.Get,$"{_configuration.GetValue<string>("CurrentHost")}/config/entity");
             var client = _clientFactory.CreateClient();
             var response = await client.SendAsync(request);
 
