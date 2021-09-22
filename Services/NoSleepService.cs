@@ -31,7 +31,7 @@ namespace TgBotAspNet.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start No Sleep Service");
-            _timer = new Timer(SelfRequest, null, TimeSpan.Zero, TimeSpan.FromMinutes(2));
+            _timer = new Timer(SelfRequest, null, TimeSpan.Zero, TimeSpan.FromMinutes(40));
             
 
             return Task.CompletedTask;
