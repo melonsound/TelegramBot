@@ -16,11 +16,13 @@ namespace TgBotAspNet
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddLogging();
             services.AddControllers();
             services.AddSingleton<IChatService, TelegramService>();
             services.AddBotCommands();
             services.AddHostedService<BotService>();
+            services.AddHostedService<NoSleepService>();
         }
 
 
