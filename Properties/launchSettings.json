@@ -12,7 +12,6 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "BOT_TOKEN": "441024176:AAF5JURKH1fkhHdzo7JyZ2tW7P3zp1GKEnE",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
