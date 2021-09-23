@@ -22,7 +22,8 @@ namespace TgBotAspNet
             services.AddSingleton<IChatService, TelegramService>();
             services.AddBotCommands();
             services.AddHostedService<BotService>();
-            services.AddHostedService<NoSleepService>();
+            //services.AddHostedService<NoSleepService>();
+            services.AddHostedService<DinnerPollingService>();
         }
 
 
