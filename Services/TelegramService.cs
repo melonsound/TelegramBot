@@ -175,7 +175,7 @@ namespace TgBotAspNet.Services
             {
                 question = EscapeText(question);
                 _logger.LogTrace("Poll to {ChatId}: {Question}", chatId, question);
-                var message = await _botClient.SendPollAsync(chatId, question, options, null);
+                var message = await _botClient.SendPollAsync(chatId, question, options, false);
 
                 return message;
             }
