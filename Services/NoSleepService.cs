@@ -26,8 +26,7 @@ namespace TgBotAspNet.Services
             _configuration = configuration;
             _logger = logger;
             _clientFactory = clientFactory;
-            _host = _configuration.GetValue<string>("CurrentHost");
-
+            _host = Environment.GetEnvironmentVariable("HOST");
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
