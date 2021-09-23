@@ -22,8 +22,8 @@ namespace TgBotAspNet.Services
         private bool _initAccessTrigger = false;
         private readonly long _chatId;
 
-        private static readonly string _triggerTime = "22:16";
-        private static readonly string _resetTime = "14:10";
+        private static readonly string _triggerTime = "12:00";
+        private static readonly string _resetTime = "12:30";
 
         public DinnerPollingService(ILogger<DinnerPollingService> logger, IChatService chatService, IConfiguration configuration)
         {
