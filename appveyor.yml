@@ -11,5 +11,9 @@
 # version format
 version: 1.2.{build}
 
+# scripts that run after cloning repository
+install:
+  - ps dotnet restore
+
 build:
   project: TgBotAspNet.csproj
