@@ -34,7 +34,7 @@ namespace TgBotAspNet.Services
             _logger = logger;
             _configuration = configuration;
 
-            _botClient = new TelegramBotClient(Environment.GetEnvironmentVariable("BOT_TOKEN"));
+            _botClient = new TelegramBotClient(Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN"));
             _botClient.OnMessage += OnMessage;
             _botClient.OnCallbackQuery += OnCallbackQuery;
             _botClient.OnUpdate += OnUpdate;
@@ -175,7 +175,7 @@ namespace TgBotAspNet.Services
             {
                 question = EscapeText(question);
                 _logger.LogTrace("Poll to {ChatId}: {Question}", chatId, question);
-                var message = await _botClient.SendPollAsync(chatId, question, options, null);
+                var message = await _botClient.SendPollAsync(chatId, question, options, false);
 
                 return message;
             }
@@ -183,6 +183,23 @@ namespace TgBotAspNet.Services
             {
                 _logger.LogError(ex, "Error while sending poll");
                 return null;
+            }
+        }
+
+        public async Task<Poll> StopPoll(long chatId, int messageId)
+        {
+            try
+            {
+                _logger.LogTrace($"Stop poll message ID: {messageId}, Chat ID {chatId}");
+                var stopPollMsg = await _botClient.StopPollAsync(chatId, messageId);
+
+                return stopPollMsg;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _logger.LogError(e, $"Error while stopping poll | message ID: {messageId}, Chat ID {chatId}");
+                throw;
             }
         }
 
