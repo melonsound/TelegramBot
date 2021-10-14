@@ -17,5 +17,6 @@ namespace TgBotAspNet.Services
         Task<bool> UpdateMessage(long chatId, int messageId, string newText, Dictionary<string, string>? buttons = null);
         Task<string> GetChatMemberName(long chatId, int userId);
         Task<Message> SendPoll(long chatId, string? question, string[] options);
+        Task<Poll> StopPoll(long chatId, int messageId);
     }
 }

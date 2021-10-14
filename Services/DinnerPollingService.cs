@@ -21,6 +21,7 @@ namespace TgBotAspNet.Services
         private bool _canSendPoll = true;
         private bool _initAccessTrigger = false;
         private readonly long _chatId;
+        private int _pollId;
 
         private static readonly string _triggerTime = "12:00";
         private static readonly string _resetTime = "12:30";
@@ -40,7 +41,7 @@ namespace TgBotAspNet.Services
             return Task.CompletedTask;
         }
 
-        private void TimeCheck(object state)
+        private async void TimeCheck(object state)
         {
             if (_initAccessTrigger)
             {
@@ -58,7 +59,7 @@ namespace TgBotAspNet.Services
                             var pollTitle = pollContext.Polls.First();
                             string[] questions = new string[questionsQuery.Length];
 
-                            for(int i = 0; i < questionsQuery.Length; i++)
+                            for (int i = 0; i < questionsQuery.Length; i++)
                             {
                                 questions[i] = questionsQuery[i].Title;
                             }
@@ -72,6 +73,7 @@ namespace TgBotAspNet.Services
                 if (currentTime.Equals(_resetTime))
                 {
                     _canSendPoll = true;
+                    var stopPollResult = await _chatService.StopPoll(_chatId, _pollId);
                 }
 
 

@@ -186,6 +186,23 @@ namespace TgBotAspNet.Services
             }
         }
 
+        public async Task<Poll> StopPoll(long chatId, int messageId)
+        {
+            try
+            {
+                _logger.LogTrace($"Stop poll message ID: {messageId}, Chat ID {chatId}");
+                var stopPollMsg = await _botClient.StopPollAsync(chatId, messageId);
+
+                return stopPollMsg;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                _logger.LogError(e, $"Error while stopping poll | message ID: {messageId}, Chat ID {chatId}");
+                throw;
+            }
+        }
+
         public async Task<string> GetChatMemberName(long chatId, int userId)
         {
             var chatMember = await _botClient.GetChatMemberAsync(new ChatId(chatId), userId);
