@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Refit;
+using TgBotAspNet.DataAccess;
 using TgBotAspNet.Extensions;
 using TgBotAspNet.Services;
 
@@ -22,7 +24,7 @@ namespace TgBotAspNet
             services.AddSingleton<IChatService, TelegramService>();
             services.AddBotCommands();
             services.AddHostedService<BotService>();
-            services.AddHostedService<NoSleepService>();
+            services.AddRefitClient<ICounterData>().ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7285"));
         }
 
 
