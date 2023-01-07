@@ -11,6 +11,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using TgBotAspNet.Commands;
+using TgBotAspNet.Helpers;
 using TgBotAspNet.Models;
 
 namespace TgBotAspNet.Services
@@ -24,6 +25,7 @@ namespace TgBotAspNet.Services
         private bool disposedValue;
         public event EventHandler<ChatMessageEventArgs>? ChatMessage;
         public event EventHandler<CallbackEventArgs>? Callback;
+        public bool IsWaitRequestOnCounter = false;
 
         public async Task<string> BotUserName() => $"@{(await _botClient.GetMeAsync()).Username}";
 
@@ -41,11 +43,15 @@ namespace TgBotAspNet.Services
             RegisterCommands();
             _botClient.StartReceiving();
         }
+        private void HandleCounter(string counterTitle)
+        {
+
+        }
 
         [Obsolete]
         private void OnUpdate(object sender, UpdateEventArgs e)
         {
-
+            HandleCounter(e.Update.Message.Text);
         }
 
         /// This method registers all the commands with the bot on telegram
@@ -151,6 +157,58 @@ namespace TgBotAspNet.Services
             return inlineKeyboard;
         }
 
+        private InlineKeyboardMarkup? GetInlineKeyboardWithRows(Dictionary<string, string>? buttons)
+        {
+            InlineKeyboardMarkup? inlineKeyboardMarkup = null;
+            var keyboard = new List<List<InlineKeyboardButton>>();
+            if (buttons != null)
+            {
+                var row = 0;
+                //add first row
+                keyboard.Add(new List<InlineKeyboardButton>());
+                foreach (var button in buttons)
+                {
+                    //limiting the number of buttons in a row
+                    if (keyboard[row].Count == 2)
+                    {
+                        keyboard.Add(new List<InlineKeyboardButton>());
+                        row++;
+                    }
+                    keyboard[row].Add(new InlineKeyboardButton { Text = button.Key, CallbackData = "test" });
+                }
+                keyboard.Add(new List<InlineKeyboardButton>() { new InlineKeyboardButton { Text = MenuHelper.BACK, CallbackData = "test" } });
+            }
+            inlineKeyboardMarkup = new InlineKeyboardMarkup(keyboard);
+
+            return inlineKeyboardMarkup;
+        }
+
+        private ReplyKeyboardMarkup? GetReplyMarkup(Dictionary<string, string>? buttons)
+        {
+            ReplyKeyboardMarkup? replyKeyboardMarkup = null;
+            var keyboard = new List<List<KeyboardButton>>();
+            if (buttons != null)
+            {
+                var row = 0;
+                //add first row
+                keyboard.Add(new List<KeyboardButton>());
+                foreach (var button in buttons)
+                {
+                    //limiting the number of buttons in a row
+                    if (keyboard[row].Count == 2)
+                    {
+                        keyboard.Add(new List<KeyboardButton>());
+                        row++;
+                    }
+                    keyboard[row].Add(new KeyboardButton { Text = button.Key });
+                }
+                keyboard.Add(new List<KeyboardButton>() { new KeyboardButton { Text = MenuHelper.BACK } });
+            }
+            replyKeyboardMarkup = new ReplyKeyboardMarkup(keyboard);
+
+            return replyKeyboardMarkup;
+        }
+
         public async Task<bool> SendMessage(long chatId, string? message, Dictionary<string, string>? buttons = null)
         {
             try
@@ -232,6 +290,24 @@ namespace TgBotAspNet.Services
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        public async Task<bool> SendMessageReplyMarkup(long chatId, string message, Dictionary<string, string> buttons = null)
+        {
+            try
+            {
+                message = EscapeText(message);
+
+                _logger.LogTrace("Sending message to {ChatId}: {Message}", chatId, message);
+
+                await _botClient.SendTextMessageAsync(new ChatId(chatId), message, parseMode: ParseMode.MarkdownV2, replyMarkup: GetInlineKeyboardWithRows(buttons));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while sending message");
+                return false;
+            }
         }
     }
 }
