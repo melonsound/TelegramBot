@@ -1,4 +1,6 @@
-﻿namespace TgBotAspNet.Helpers
+﻿using System.Collections.Generic;
+
+namespace TgBotAspNet.Helpers
 {
     public static class MenuHelper
     {
@@ -8,5 +10,28 @@
         public const string DELETE_COUNTER = "Удалить счетчик";
         public const string BACK = "<< назад";
 
+        public static Dictionary<string, string> Menu
+        { 
+            get 
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Создать счетчик", "/ccounter" },
+                    { "Мои счетчики", "/mycounters" },
+                    { "Удалить счетчик", "/deletecounter" }
+                };
+            } 
+        }
+
+        public static Dictionary<string, string> BackButton
+        {
+            get
+            {
+                return new Dictionary<string, string>
+                {
+                    { "Назад", "/menu" }
+                };
+            }
+        }
     }
 }

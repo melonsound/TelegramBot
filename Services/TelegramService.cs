@@ -49,9 +49,13 @@ namespace TgBotAspNet.Services
         }
 
         [Obsolete]
-        private void OnUpdate(object sender, UpdateEventArgs e)
+        private async void OnUpdate(object sender, UpdateEventArgs e)
         {
-            HandleCounter(e.Update.Message.Text);
+            /*
+            if (e.Update.Message.Text.Equals(CommandsHelper.CREATE_COUNTER))
+            {
+                await SendMessage(e.Update.Message.Chat.Id, "Введите название счетчика");
+            }*/
         }
 
         /// This method registers all the commands with the bot on telegram
@@ -174,9 +178,9 @@ namespace TgBotAspNet.Services
                         keyboard.Add(new List<InlineKeyboardButton>());
                         row++;
                     }
-                    keyboard[row].Add(new InlineKeyboardButton { Text = button.Key, CallbackData = "test" });
+                    keyboard[row].Add(new InlineKeyboardButton { Text = button.Key, CallbackData = button.Value });
                 }
-                keyboard.Add(new List<InlineKeyboardButton>() { new InlineKeyboardButton { Text = MenuHelper.BACK, CallbackData = "test" } });
+                //keyboard.Add(new List<InlineKeyboardButton>() { new InlineKeyboardButton { Text = MenuHelper.BACK, CallbackData = "/menu" } });
             }
             inlineKeyboardMarkup = new InlineKeyboardMarkup(keyboard);
 
@@ -217,7 +221,7 @@ namespace TgBotAspNet.Services
 
                 _logger.LogTrace("Sending message to {ChatId}: {Message}", chatId, message);
 
-                await _botClient.SendTextMessageAsync(new ChatId(chatId), message, parseMode: ParseMode.MarkdownV2, replyMarkup: GetInlineKeyboard(buttons));
+                await _botClient.SendTextMessageAsync(new ChatId(chatId), message, parseMode: ParseMode.MarkdownV2, replyMarkup: GetInlineKeyboardWithRows(buttons));
                 return true;
             }
             catch (Exception ex)
@@ -300,7 +304,7 @@ namespace TgBotAspNet.Services
 
                 _logger.LogTrace("Sending message to {ChatId}: {Message}", chatId, message);
 
-                await _botClient.SendTextMessageAsync(new ChatId(chatId), message, parseMode: ParseMode.MarkdownV2, replyMarkup: GetInlineKeyboardWithRows(buttons));
+                await _botClient.SendTextMessageAsync(new ChatId(chatId), message, parseMode: ParseMode.MarkdownV2, replyMarkup: GetReplyMarkup(buttons));
                 return true;
             }
             catch (Exception ex)

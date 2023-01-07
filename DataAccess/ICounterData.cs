@@ -7,10 +7,13 @@ namespace TgBotAspNet.DataAccess
 {
     public interface ICounterData
     {
-        [Get("/api/counter")]
-        Task<List<Counter>> GetCounters();
+        [Get("/api/counters/{userId}")]
+        Task<List<Counter>> GetCounters(long userId);
 
-        [Post("/api/counter/create-counter")]
+        [Post("/api/counters/create-counter")]
         Task<string> CreateCounter([Body] CreateCounterBody counter);
+
+        [Put("/api/counters/inc-counter/{userId}/{counterId}")]
+        Task<string> IncCounter(long userId, long counterId);
     }
 }
