@@ -15,5 +15,14 @@ namespace TgBotAspNet.DataAccess
 
         [Put("/api/counters/inc-counter/{userId}/{counterId}")]
         Task<string> IncCounter(long userId, long counterId);
+
+        [Delete("/api/counters/del-counter/{userId}/{counterId}")]
+        Task<string> DelCounter(long userId, long counterId);
+
+        [Put("/api/counters/clr-counter/{userId}/{counterId}")]
+        Task<string> ClrCounter(long userId, long counterId);
+
+        [Put("/api/counters/clr-all-counter/{userId}")]
+        Task<string> ClrAllCounters(long userId);
     }
 }

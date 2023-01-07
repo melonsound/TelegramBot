@@ -18,7 +18,9 @@ namespace TgBotAspNet.Helpers
                 {
                     { "Создать счетчик", "/ccounter" },
                     { "Мои счетчики", "/mycounters" },
-                    { "Удалить счетчик", "/deletecounter" }
+                    { "Удалить счетчик", "/countersfordelete" },
+                    { "Очистить счетчик", "/countersforclear" },
+                    { "Очистить все счетчики", "/countersforallclear" }
                 };
             } 
         }
